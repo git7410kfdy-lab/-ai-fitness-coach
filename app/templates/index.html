@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健身偵簡單 - NKUST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/comprehensive-analytics.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+
+</head>
+<body>
+    <!-- 頂部導航 -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='img/nkust.png') }}" alt="NKUST Logo">
+            <span>高雄科技大學</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('main.index') }}" class="nav-link">首頁</a>
+            <a href="{{ url_for('exercise.realtime') }}" class="nav-link">即時偵測</a>
+            <a href="{{ url_for('main.Equipment_Introduction') }}" class="nav-link">器材介紹</a>
+            <a href="{{ url_for('main.Exercise_Knowledge') }}" class="nav-link">動作知識</a>
+            <a href="{{ url_for('main.classroom') }}" class="nav-link">課程回應</a>
+        </div>
+        
+        <div class="user-profile" data-user-id="{{ current_user.username if current_user.is_authenticated else 'C111151146' }}">
+            {% if current_user.is_authenticated %}
+            <div class="avatar">{{ current_user.username[0] }}</div>
+            <div class="user-info">
+                <span class="username">{{ current_user.username }}</span>
+                <span class="user-level">Level 5 健身勇士</span>
+            </div>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link">登出</a>
+            {% else %}
+            <a href="{{ url_for('main.login') }}" class="nav-link">登入</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- 英雄區塊 -->
+    <section class="hero hero-green-background">
+        <div class="hero-bg"></div>
+        
+        <!-- 整合輪播區塊 -->
+        <div class="hero-carousel">
+            <div class="hero-slides">
+                <!-- 推送內容幻燈片 1 -->
+                <div class="hero-slide active">
+                    <a href="https://www.instagram.com/balance_forge1?igsh=MWExanRlYWZncWJscg%3D%3D&utm_source=qr" target="_blank" class="promo-link">
+                        <img src="{{ url_for('static', filename='img/ad/S__331071492.jpg') }}" alt="Balance Forge 宣傳圖片 1" class="promo-image">
+                        <div class="promo-overlay">
+                            <div class="promo-content">
+                                <h2>Balance Forge</h2>
+                                <p>追蹤我們的 Instagram 獲得更多健身靈感</p>
+                                <span class="promo-cta">立即關注</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 推送內容幻燈片 2 -->
+                <div class="hero-slide">
+                    <a href="https://www.instagram.com/balance_forge1?igsh=MWExanRlYWZncWJscg%3D%3D&utm_source=qr" target="_blank" class="promo-link">
+                        <img src="{{ url_for('static', filename='img/ad/S__331071493.jpg') }}" alt="Balance Forge 宣傳圖片 2" class="promo-image">
+                        <div class="promo-overlay">
+                            <div class="promo-content">
+                                <h2>Balance Forge</h2>
+                                <p>專業健身指導，打造完美體態</p>
+                                <span class="promo-cta">了解更多</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 原有內容幻燈片 -->
+                <div class="hero-slide">
+                    <div class="hero-content">
+                        <h1>開始你的健身冒險</h1>
+                        <p>透過完成運動挑戰，提升你的健身等級，解鎖更多成就與獎勵！</p>
+                        <a href="{{ url_for('exercise.realtime') }}" class="hero-cta">立即開始訓練</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-indicators">
+                <span class="indicator active" data-slide="0"></span>
+                <span class="indicator" data-slide="1"></span>
+                <span class="indicator" data-slide="2"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 進度區塊 -->
+
+    <section class="progress-section">
+        <div class="container">
+            <h2>健身報告</h2>
+            <p class="section-desc">查看您的健身進度和統計數據</p>
+            
+            <!-- 手動查詢區塊 -->
+            <div class="manual-input-section">
+                <h3>手動查詢健身報告</h3>
+                <div class="input-group">
+                    <input type="text" id="manual-user-id" placeholder="輸入用戶ID (如 C111151146)" value="C111151146">
+                    <button id="manual-load-btn" class="btn-primary">查詢報告</button>
+                </div>
+                <div id="manual-input-error" class="error-message" style="display:none;"></div>
+                <div id="loading-indicator" style="display:none;">正在載入數據...</div>
+            </div>
+            
+            <!-- 體態輸入區塊 -->
+            <div class="body-stats-section">
+                <h3><i class="fas fa-user-circle"></i> 個人體態設定</h3>
+                <p class="section-desc">設定您的身體數據，獲得更精準的健身建議</p>
+                
+                <div class="body-stats-container">
+                    <!-- 身高輸入 -->
+                    <div class="stat-input-group">
+                        <div class="stat-label">
+                            <i class="fas fa-ruler-vertical"></i>
+                            <span>身高</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="height-slider" min="140" max="220" value="170" class="stat-slider">
+                            <div class="slider-track">
+                                <div class="slider-fill" id="height-fill"></div>
+                            </div>
+                        </div>
+                        <div class="stat-display">
+                            <span id="height-value">170</span>
+                            <span class="unit">cm</span>
+                        </div>
+                        <div class="stat-visual">
+                            <div class="height-indicator" id="height-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 體重輸入 -->
+                    <div class="stat-input-group">
+                        <div class="stat-label">
+                            <i class="fas fa-weight"></i>
+                            <span>體重</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="weight-slider" min="40" max="150" value="70" class="stat-slider">
+                            <div class="slider-track">
+                                <div class="slider-fill" id="weight-fill"></div>
+                            </div>
+                        </div>
+                        <div class="stat-display">
+                            <span id="weight-value">70</span>
+                            <span class="unit">kg</span>
+                        </div>
+                        <div class="stat-visual">
+                            <div class="weight-indicator" id="weight-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 年齡輸入 -->
+                    <div class="stat-input-group">
+                        <div class="stat-label">
+                            <i class="fas fa-birthday-cake"></i>
+                            <span>年齡</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="age-slider" min="16" max="80" value="25" class="stat-slider">
+                            <div class="slider-track">
+                                <div class="slider-fill" id="age-fill"></div>
+                            </div>
+                        </div>
+                        <div class="stat-display">
+                            <span id="age-value">25</span>
+                            <span class="unit">歲</span>
+                        </div>
+                        <div class="stat-visual">
+                            <div class="age-indicator" id="age-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- BMI 顯示 -->
+                    <div class="bmi-display">
+                        <div class="bmi-card">
+                            <div class="bmi-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div class="bmi-info">
+                                <div class="bmi-label">BMI 指數</div>
+                                <div class="bmi-value" id="bmi-value">24.2</div>
+                                <div class="bmi-status" id="bmi-status">正常範圍</div>
+                            </div>
+                            <div class="bmi-chart">
+                                <div class="bmi-scale">
+                                    <div class="bmi-range underweight"></div>
+                                    <div class="bmi-range normal"></div>
+                                    <div class="bmi-range overweight"></div>
+                                    <div class="bmi-range obese"></div>
+                                </div>
+                                <div class="bmi-pointer" id="bmi-pointer"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 保存按鈕 -->
+                    <div class="save-stats-container">
+                        <button id="save-body-stats" class="save-stats-btn">
+                            <i class="fas fa-save"></i>
+                            <span>保存體態數據</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 綜合健身分析報告 -->
+            <div class="comprehensive-analytics" id="comprehensive-analytics">
+                <!-- 基礎統計總覽 -->
+                <div class="analytics-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">總重量</div>
+                            <div class="stat-value" id="total-weight">0 kg</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">總卡路里</div>
+                            <div class="stat-value" id="total-calories">0 卡路里</div>
+                            <div class="stat-percentage" id="calorie-percent"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">總訓練時間</div>
+                            <div class="stat-value" id="total-training-time">0 小時 0 分鐘</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">訓練頻率</div>
+                            <div class="stat-value" id="training-frequency">0 次/周</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-label">總運動次數</div>
+                            <div class="stat-value" id="total-exercises">0 次</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 體態分析區域 -->
+                <div class="body-analysis-section">
+                    <h3><i class="fas fa-user-md"></i> 體態分析</h3>
+                    <div class="body-analysis-grid">
+                        <div class="current-body-stats">
+                            <h4>當前體態</h4>
+                            <div id="current-body-display"></div>
+                        </div>
+                        <div class="body-trends">
+                            <h4>體態變化趨勢</h4>
+                            <canvas id="bmi-trend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 運動表現分析 -->
+                <div class="exercise-analysis-section">
+                    <h3><i class="fas fa-chart-bar"></i> 運動表現分析</h3>
+                    <div class="analysis-charts">
+                        <div class="chart-container">
+                            <h4>每日卡路里消耗趨勢</h4>
+                            <canvas id="daily-calories-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h4>肌肉群發展雷達圖</h4>
+                            <canvas id="muscle-radar-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 運動統計與記錄 -->
+                <div class="exercise-stats-section">
+                    <div class="stats-grid">
+                        <div class="exercise-types">
+                            <h4>運動類型統計</h4>
+                            <div id="exercise-types-container"></div>
+                        </div>
+                        <div class="recent-activities">
+                            <h4>最近訓練記錄</h4>
+                            <div id="recent-activities-container"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 健身建議與洞察 -->
+                <div class="insights-section">
+                    <h3><i class="fas fa-lightbulb"></i> 個人化建議</h3>
+                    <div id="insights-container"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 冒險者工會任務板 -->
+    <section class="quest-section">
+        <div id="quest-board"></div>
+    </section>
+
+    <!-- 成就區塊 -->
+    <section class="achievements-section">
+        <div class="section-title">
+            <h2>你的成就</h2>
+        </div>
+        
+        <div class="achievements-grid">
+            <div class="achievement-card">
+                <div class="achievement-icon">🏆</div>
+                <h3 class="achievement-title">初級健身者</h3>
+                <p class="achievement-desc">完成首次訓練</p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔥</div>
+                <h3 class="achievement-title">連續訓練</h3>
+                <p class="achievement-desc">連續3天訓練</p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">💪</div>
+                <h3 class="achievement-title">力量之王</h3>
+                <p class="achievement-desc">完成100次深蹲</p>
+            </div>
+            
+            <div class="achievement-card achievement-locked">
+                <div class="achievement-icon">🏋️</div>
+                <h3 class="achievement-title">健身達人</h3>
+                <p class="achievement-desc">完成所有基礎訓練</p>
+            </div>
+            
+            <div class="achievement-card achievement-locked">
+                <div class="achievement-icon">⚡</div>
+                <h3 class="achievement-title">速度之星</h3>
+                <p class="achievement-desc">10分鐘內完成訓練</p>
+            </div>
+            
+            <div class="achievement-card achievement-locked">
+                <div class="achievement-icon">🌟</div>
+                <h3 class="achievement-title">完美姿勢</h3>
+                <p class="achievement-desc">獲得5次完美評分</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部區塊 -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" class="footer-link">關於我們</a>
+            <a href="#" class="footer-link">使用說明</a>
+            <a href="#" class="footer-link">隱私政策</a>
+            <a href="#" class="footer-link">聯絡我們</a>
+        </div>
+        <p class="footer-text">© 2023 國立高雄科技大學 - 健身冒險. 版權所有.</p>
+    </footer>
+
+    <!-- 遊戲化通知 -->
+    <div class="game-notification" id="game-notification">
+        <div class="notification-icon">🎉</div>
+        <div class="notification-content">
+            <h4 class="notification-title">恭喜！</h4>
+            <p class="notification-message">你獲得了新的成就：連續訓練3天！</p>
+        </div>
+        <button class="close-notification" onclick="closeNotification()">×</button>
+    </div>
+
+    <!-- Chart.js 已在頁面頂部引入 -->
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+</body>
+</html>
+                    

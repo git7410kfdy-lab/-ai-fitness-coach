@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 健身教練 - 即時運動偵測</title>
+    
+    <!-- CSS 樣式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/realtime.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 第三方庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- 現有模組（保持兼容性）-->
+    <script src="{{ url_for('static', filename='js/config.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/combo.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/workout_handler.js') }}"></script>
+    
+    <!-- 新的模組化系統 -->
+    <script src="{{ url_for('static', filename='js/modules/module-loader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+</head>
+<body>
+    <!-- 頁面載入動畫 -->
+    <div class="page-loader" id="page-loader">
+        <div class="loader-content">
+            <div class="loader-icon">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+            <div class="loader-text">載入中...</div>
+            <div class="loader-progress">
+                <div class="loader-progress-bar" id="loader-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要內容 -->
+    <div class="main-container">
+        <!-- 頭部導航 -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="header-title">
+                    <i class="fas fa-dumbbell"></i>
+                    AI 健身教練
+                </h1>
+            </div>
+            <div class="header-center">
+                <div class="level-info">
+                    <span class="level-label">關卡</span>
+                    <span class="level-number" id="current-level">1</span>
+                    <span class="level-name" id="current-level-name">森林入口</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn" id="show-map-btn">
+                    <i class="fas fa-map"></i>
+                    地圖
+                </button>
+                <button class="header-btn" id="settings-btn">
+                    <i class="fas fa-cog"></i>
+                    設定
+                </button>
+            </div>
+        </header>
+
+        <!-- 小地圖 -->
+        <div class="mini-map-container">
+            <div class="mini-map-scroll-container" id="mini-map-scroll-container">
+                <div class="mini-map-levels">
+                    <div class="mini-map-level completed" data-level="1">
+                        <i class="fas fa-tree"></i>
+                        <span>1</span>
+                    </div>
+                    <div class="mini-map-level active" data-level="2">
+                        <i class="fas fa-mountain"></i>
+                        <span>2</span>
+                    </div>
+                    <div class="mini-map-level" data-level="3">
+                        <i class="fas fa-water"></i>
+                        <span>3</span>
+                    </div>
+                    <div class="mini-map-level" data-level="4">
+                        <i class="fas fa-dungeon"></i>
+                        <span>4</span>
+                    </div>
+                    <div class="mini-map-level" data-level="5">
+                        <i class="fas fa-dragon"></i>
+                        <span>5</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mini-map-controls">
+                <button class="map-scroll-btn" id="mini-scroll-left-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="map-scroll-btn" id="mini-scroll-right-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- 主要內容區域 -->
+        <div class="content-container">
+            <!-- 左側視頻區域 -->
+            <div class="video-section">
+                <div class="video-container">
+                    <canvas id="video-canvas"></canvas>
+                    <div class="video-overlay">
+                        <div class="detection-status" id="detection-status">
+                            <i class="fas fa-circle"></i>
+                            <span>未開始偵測</span>
+                        </div>
+                        <div class="remaining-sets" id="remaining-sets">
+                            剩餘組數: <span id="sets-count">0/0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側面板 -->
+            <div class="right-panel">
+                <!-- 怪物血量/護盾顯示 -->
+                <div class="monster-health-container">
+                    <div class="monster-info">
+                        <div class="monster-name" id="monster-name">森林哥布林</div>
+                        <div class="monster-level" id="monster-level">Lv.1</div>
+                    </div>
+                    <div class="health-bar-container">
+                        <div class="health-bar">
+                            <div class="health-fill" id="monster-health-fill"></div>
+                            <div class="health-text">
+                                <span id="monster-health-current">100</span>/<span id="monster-health-max">100</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shield-bar-container" id="shield-container" style="display: none;">
+                        <div class="shield-bar">
+                            <div class="shield-fill" id="monster-shield-fill"></div>
+                            <div class="shield-text">
+                                護盾: <span id="monster-shield-current">0</span>/<span id="monster-shield-max">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3D 怪物容器 -->
+                <div class="monster-3d-container" id="monster-3d-container">
+                    <!-- Three.js 3D 模型將在這裡渲染 -->
+                </div>
+
+                <!-- 教練提示區域 -->
+                <div class="coach-tips-container">
+                    <div class="coach-tips-header">
+                        <i class="fas fa-user-tie"></i>
+                        <span>教練提示</span>
+                    </div>
+                    <div class="coach-tips-content" id="coach-tips">
+                        選擇一個運動開始訓練
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combo 技能顯示區域 -->
+        <div class="combo-skills-container">
+            <div class="combo-counter">
+                <div class="combo-label">連擊</div>
+                <div class="combo-value" id="combo-count">0</div>
+            </div>
+            <div class="combo-skills">
+                <div class="combo-skill" id="combo-skill-1">
+                    <div class="skill-icon"><i class="fas fa-fist-raised"></i></div>
+                    <div class="skill-name">力量爆發</div>
+                    <div class="skill-combo">5連擊</div>
+                </div>
+                <div class="combo-skill" id="combo-skill-2">
+                    <div class="skill-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="skill-name">防禦強化</div>
+                    <div class="skill-combo">10連擊</div>
+                </div>
+                <div class="combo-skill" id="combo-skill-3">
+                    <div class="skill-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="skill-name">閃電攻擊</div>
+                    <div class="skill-combo">15連擊</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 運動設定區域 -->
+        <div class="exercise-settings-container">
+            <div class="exercise-settings-panel">
+                <div class="settings-header">
+                    <h3>運動設定</h3>
+                    <button class="button secondary" id="show-workout-plan-btn">
+                        <i class="fas fa-list"></i> 訓練計劃
+                    </button>
+                </div>
+
+                <form class="exercise-form">
+                    <!-- 運動類型選擇 -->
+                    <div class="form-group">
+                        <label for="exercise-type">運動類型</label>
+                        <select id="exercise-type" class="form-control">
+                            <option value="squat">深蹲</option>
+                            <option value="pushup">伏地挺身</option>
+                            <option value="situp">仰臥起坐</option>
+                            <option value="basketball">籃球投籃</option>
+                            <option value="basketball_dribble">籃球運球</option>
+                            <option value="tabletennis">桌球</option>
+                        </select>
+                    </div>
+
+                    <!-- 運動參數設定 -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exercise-weight">重量 (kg)</label>
+                            <input type="number" id="exercise-weight" class="form-control" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="exercise-reps">次數</label>
+                            <input type="number" id="exercise-reps" class="form-control" value="10" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="exercise-sets">組數</label>
+                            <input type="number" id="exercise-sets" class="form-control" value="3" min="1">
+                        </div>
+                    </div>
+
+                    <!-- 偵測線設定 -->
+                    <div class="form-group">
+                        <label for="detection-line">偵測線位置</label>
+                        <input type="range" id="detection-line" class="form-control" min="0" max="100" value="50">
+                        <div class="range-labels">
+                            <span>上</span>
+                            <span>下</span>
+                        </div>
+                    </div>
+
+                    <!-- 當前運動信息顯示 -->
+                    <div class="current-exercise-info">
+                        <div class="exercise-info-item">
+                            <span class="info-label">當前運動:</span>
+                            <span class="info-value" id="current-exercise-name">深蹲</span>
+                        </div>
+                        <div class="exercise-info-item">
+                            <span class="info-label">進度:</span>
+                            <span class="info-value" id="current-exercise-progress">
+                                0/10 次 (<span id="current-exercise-sets">0/3</span> 組)
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 特定運動控制元素 -->
+                    <div id="basketball-controls" class="exercise-specific-controls" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">籃球投籃控制</div>
+                            <div class="card-body">
+                                <button type="button" id="reset-basketball" class="btn btn-warning">重置檢測</button>
+                                <p class="mt-2">請將手放入對應的圓圈中保持3秒來確定慣用手，然後按照指示完成投籃動作。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="basketball-dribble-controls" class="exercise-specific-controls" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">籃球運球控制</div>
+                            <div class="card-body">
+                                <button type="button" id="reset-basketball-dribble" class="btn btn-warning">重置檢測</button>
+                                <p class="mt-2">請將手放入對應的圓圈中保持3秒來確定慣用手，然後按照指示完成運球動作。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 運球模式顯示區域 -->
+                    <div id="dribble-mode-container" class="exercise-info-panel" style="display: none;">
+                        <div class="info-panel-header">
+                            <i class="fas fa-basketball-ball"></i>
+                            <span>運球模式</span>
+                        </div>
+                        <div class="info-panel-content">
+                            <div class="dribble-mode-display">
+                                <span>當前模式: </span>
+                                <span id="current-dribble-mode">高位運球</span>
+                            </div>
+                            <div class="dribble-mode-description">
+                                <p id="dribble-mode-description">高位運球模式：保持手腕在膝蓋以上位置運球</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- 控制面板 -->
+                <div class="control-stats-panel">
+                    <div class="exercise-counter">
+                        <div class="counter-label">運動次數</div>
+                        <div class="counter-value" id="exercise-count">0</div>
+                    </div>
+
+                    <div class="control-panel">
+                        <button class="button" id="start-detection">開始偵測</button>
+                        <button class="button secondary" id="stop-detection" disabled>停止偵測</button>
+                        <button class="button accent" id="reset-count">重置計數</button>
+                        <button type="button" onclick="window.location.href='/exercise/picture'" class="button info large">
+                            <i class="fas fa-camera"></i> 檢查投籃動作
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部統計區域 -->
+        <div class="bottom-stats-container">
+            <div class="stats-card">
+                <div class="stats-label">總運動次數</div>
+                <div class="stats-value" id="exercise-count-stats">0</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">消耗熱量</div>
+                <div class="stats-value" id="calories-burned">0</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">運動時間</div>
+                <div class="stats-value" id="exercise-time">00:00</div>
+            </div>
+            <button class="export-button" id="export-excel">匯出數據</button>
+        </div>
+    </div>
+
+    <!-- 模態視窗 -->
+    <!-- 休息模態視窗 -->
+    <div class="modal" id="rest-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>休息時間</h2>
+            </div>
+            <div class="modal-body">
+                <div class="rest-timer-container">
+                    <div class="rest-timer-circle">
+                        <span id="rest-timer">30</span>
+                    </div>
+                    <div class="rest-timer-label">秒後開始下一個運動</div>
+                </div>
+                <div class="next-exercise-info">
+                    <h3>下一個運動</h3>
+                    <div class="next-exercise-details">
+                        <div class="next-exercise-icon" id="next-exercise-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="next-exercise-name" id="next-exercise-name">深蹲</div>
+                        <div class="next-exercise-target" id="next-exercise-target">10次 x 3組</div>
+                    </div>
+                </div>
+                <div class="rest-actions">
+                    <button class="button accent" id="skip-rest-btn">跳過休息</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 地圖模態視窗 -->
+    <div class="modal" id="map-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>冒險地圖</h2>
+                <div class="close-modal" id="close-map-modal">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="map-hint centered">點擊關卡可直接選擇</div>
+                <div class="full-map-container">
+                    <div class="full-map-scroll-container" id="full-map-scroll-container">
+                        <div class="full-map-levels">
+                            <div class="full-map-level-item">
+                                <div class="level-node completed">
+                                    <i class="fas fa-tree"></i>
+                                    <span>1</span>
+                                </div>
+                                <div class="level-path"></div>
+                                <div class="level-name">森林入口</div>
+                                <div class="level-description">初始關卡，適合新手挑戰</div>
+                            </div>
+                            <div class="full-map-level-item">
+                                <div class="level-node active">
+                                    <i class="fas fa-mountain"></i>
+                                    <span>2</span>
+                                </div>
+                                <div class="level-path"></div>
+                                <div class="level-name">山脈地帶</div>
+                                <div class="level-description">中級難度，需要更多力量</div>
+                            </div>
+                            <div class="full-map-level-item">
+                                <div class="level-node">
+                                    <i class="fas fa-water"></i>
+                                    <span>3</span>
+                                </div>
+                                <div class="level-path"></div>
+                                <div class="level-name">神秘湖泊</div>
+                                <div class="level-description">需要耐力與平衡</div>
+                            </div>
+                            <div class="full-map-level-item">
+                                <div class="level-node">
+                                    <i class="fas fa-dungeon"></i>
+                                    <span>4</span>
+                                </div>
+                                <div class="level-path"></div>
+                                <div class="level-name">古老洞窟</div>
+                                <div class="level-description">高難度，需要全面技能</div>
+                            </div>
+                            <div class="full-map-level-item">
+                                <div class="level-node">
+                                    <i class="fas fa-dragon"></i>
+                                    <span>5</span>
+                                </div>
+                                <div class="level-name">龍之巢穴</div>
+                                <div class="level-description">最終挑戰，考驗極限</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="full-map-controls">
+                        <button class="map-scroll-btn large" id="full-scroll-left-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="map-scroll-btn large" id="full-scroll-right-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="button secondary" id="close-map-btn">關閉</button>
+                <button class="button" id="start-level-btn">開始挑戰</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成就通知 -->
+    <div class="achievement-notification" id="achievement-notification">
+        <div class="achievement-icon">🏆</div>
+        <div class="achievement-text">
+            <h3 id="notification-title">成就解鎖！</h3>
+            <p id="notification-description">你已完成一項新成就</p>
+        </div>
+    </div>
+
+    <!-- 訓練計劃表單模態視窗 -->
+    <div class="modal" id="workout-plan-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>訓練計劃設定</h2>
+                <div class="close-modal" id="close-workout-plan-modal">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="plan-description">
+                    設定您的訓練計劃，可以添加多個運動動作及其目標次數。完成一個動作後，系統會自動切換到下一個動作。
+                </div>
+                <div class="workout-plan-list" id="workout-plan-list">
+                    <!-- 訓練計劃項目將在這裡動態添加 -->
+                </div>
+                <button class="button secondary" id="add-exercise-btn">
+                    <i class="fas fa-plus"></i> 添加運動
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="button secondary" id="cancel-plan-btn">取消</button>
+                <button class="button" id="save-plan-btn">保存計劃</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 籃球投籃檢視提示視窗 -->
+    <div class="modal" id="basketball-prompt-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>籃球投籃姿勢檢視</h2>
+                <div class="close-modal" id="close-basketball-prompt-modal">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="basketball-prompt-description">
+                    恭喜完成籃球投籃訓練！您想要查看您的投籃姿勢分析嗎？
+                </div>
+                <div class="basketball-prompt-image">
+                    <img src="/static/img/basketball_posture.png" alt="籃球投籃姿勢示意圖">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="button secondary" id="skip-basketball-btn">稍後再說</button>
+                <button class="button primary" id="view-basketball-btn">立即查看</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 通知容器 -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- 模組載入錯誤提示 -->
+    <div class="module-error-container" id="module-error-container" style="display: none;">
+        <div class="error-content">
+            <h3>模組載入失敗</h3>
+            <p id="error-message">載入應用程式模組時發生錯誤，請重新整理頁面。</p>
+            <button class="button" onclick="location.reload()">重新載入</button>
+        </div>
+    </div>
+</body>
+</html>

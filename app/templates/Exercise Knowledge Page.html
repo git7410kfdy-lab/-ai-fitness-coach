@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>運動動作知識庫</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .exercise-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .exercise-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: #3B82F6;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    .section-title {
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 3px;
+      bottom: 0;
+      left: 0;
+      background-color: #3B82F6;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- 導航欄 -->
+  <nav class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <a href="/" class="flex items-center space-x-2">
+          <i class="fas fa-dumbbell text-blue-500 text-2xl"></i>
+          <span class="font-bold text-xl text-gray-800">健身偵簡單</span>
+        </a>
+      </div>
+      <div class="hidden md:flex space-x-8">
+        <a href="/" class="nav-link text-gray-600 hover:text-blue-500">首頁</a>
+        <a href="/exercise" class="nav-link text-blue-500 font-semibold">運動知識</a>
+        <a href="/equipment" class="nav-link text-gray-600 hover:text-blue-500">器材介紹</a>
+        <a href="/classroom" class="nav-link text-gray-600 hover:text-blue-500">開始訓練</a>
+      </div>
+      <div class="md:hidden">
+        <button class="text-gray-500 hover:text-blue-500 focus:outline-none">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 py-8 max-w-5xl">
+    <!-- 頁面標題 -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">運動動作知識庫</h1>
+      <p class="text-gray-600 max-w-2xl mx-auto">掌握正確的運動技巧，讓你的健身之旅更加安全有效。每個動作都配有詳細說明和注意事項，幫助你避免常見錯誤。</p>
+    </div>
+
+    <!-- 快速導航 -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-10">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">快速導航</h2>
+      <div class="flex flex-wrap gap-2">
+        <a href="#squat" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">深蹲</a>
+        <a href="#biceps-curl" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">二頭彎舉</a>
+        <a href="#shoulder-press" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">肩推</a>
+        <a href="#push-up" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">伏地挺身</a>
+        <a href="#pull-up" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">引體向上</a>
+        <a href="#dumbbell-row" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">啞鈴划船</a>
+      </div>
+    </div>
+
+    <!-- 運動動作介紹區 -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-8 text-gray-700 section-title">運動動作介紹</h2>
+
+      <!-- 深蹲 -->
+      <div id="squat" class="bg-white rounded-lg shadow-md p-6 mb-8 flex flex-col md:flex-row items-center gap-8 exercise-card">
+        <div class="md:w-1/3 flex justify-center">
+          <img src="{{ url_for('static', filename='img/深蹲介紹.png') }}" alt="深蹲" class="rounded-lg object-cover w-60 h-60 shadow-md">
+        </div>
+        <div class="md:w-2/3">
+          <div class="flex items-center mb-4">
+            <h3 class="text-2xl font-semibold text-gray-700">深蹲 (Squat)</h3>
+            <span class="ml-3 px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full">下肢訓練</span>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">如何做</h4>
+            <p class="text-gray-600">
+              站立，雙腳與肩同寬、腳尖稍向外。慢慢下蹲至大腿與地面平行，再利用大腿與臀部的力量站起來。
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">注意重點</h4>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>膝蓋不要超過腳尖</li>
+              <li>保持背部挺直與核心收緊</li>
+              <li>動作需穩定且控制好下降與上升的速度</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 二頭彎舉 -->
+      <div id="biceps-curl" class="bg-white rounded-lg shadow-md p-6 mb-8 flex flex-col md:flex-row items-center gap-8 exercise-card">
+        <div class="md:w-1/3 flex justify-center">
+          <img src="{{ url_for('static', filename='img/二頭灣舉.png') }}" alt="二頭彎舉" class="rounded-lg object-cover w-60 h-60 shadow-md">
+        </div>
+        <div class="md:w-2/3">
+          <div class="flex items-center mb-4">
+            <h3 class="text-2xl font-semibold text-gray-700">二頭彎舉 (Biceps Curl)</h3>
+            <span class="ml-3 px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">手臂訓練</span>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">如何做</h4>
+            <p class="text-gray-600">
+              雙手各持一啞鈴，自然垂放。保持肘部貼近身體，彎曲手臂將啞鈴舉向肩部，然後慢慢下降回原位。
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">注意重點</h4>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>背部保持穩定，避免用身體擺動</li>
+              <li>專注於二頭肌的收縮</li>
+              <li>動作要平穩且控制得宜</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 其他運動動作保持相同格式，這裡省略... -->
+      
+      <!-- 肩推 -->
+      <div id="shoulder-press" class="bg-white rounded-lg shadow-md p-6 mb-8 flex flex-col md:flex-row items-center gap-8 exercise-card">
+        <div class="md:w-1/3 flex justify-center">
+          <img src="{{ url_for('static', filename='img/肩推.png') }}" alt="肩推" class="rounded-lg object-cover w-60 h-60 shadow-md">
+        </div>
+        <div class="md:w-2/3">
+          <div class="flex items-center mb-4">
+            <h3 class="text-2xl font-semibold text-gray-700">肩推 (Shoulder Press)</h3>
+            <span class="ml-3 px-3 py-1 bg-yellow-100 text-yellow-700 text-sm rounded-full">肩部訓練</span>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">如何做</h4>
+            <p class="text-gray-600">
+              坐或站姿均可，雙手各持啞鈴放於肩部位置，用力推舉啞鈴至手臂伸直，然後緩慢下降回到起始位置。
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">注意重點</h4>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>保持核心穩定</li>
+              <li>避免肩部過度伸展</li>
+              <li>動作過程中節奏要均勻且控制良好</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 伏地挺身 -->
+      <div id="push-up" class="bg-white rounded-lg shadow-md p-6 mb-8 flex flex-col md:flex-row items-center gap-8 exercise-card">
+        <div class="md:w-1/3 flex justify-center">
+          <img src="{{ url_for('static', filename='img/扶地挺身.png') }}" alt="伏地挺身" class="rounded-lg object-cover w-60 h-60 shadow-md">
+        </div>
+        <div class="md:w-2/3">
+          <div class="flex items-center mb-4">
+            <h3 class="text-2xl font-semibold text-gray-700">伏地挺身 (Push-up)</h3>
+            <span class="ml-3 px-3 py-1 bg-red-100 text-red-700 text-sm rounded-full">胸部訓練</span>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">如何做</h4>
+            <p class="text-gray-600">
+              俯臥，雙手撐地，手掌與肩同寬，腳尖著地。保持身體成一直線，彎曲手肘下降至胸部接近地面，然後推起回到起始位置。
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">注意重點</h4>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>保持身體成一直線，避免腰部下沉或抬高</li>
+              <li>肘部靠近身體，不要過度外展</li>
+              <li>呼吸節奏：下降時吸氣，上升時呼氣</li>
+              <li>初學者可先從膝蓋著地的變式開始</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 引體向上 -->
+      <div id="pull-up" class="bg-white rounded-lg shadow-md p-6 mb-8 flex flex-col md:flex-row items-center gap-8 exercise-card">
+        <div class="md:w-1/3 flex justify-center">
+          <img src="{{ url_for('static', filename='img/引體向上.png') }}" alt="引體向上" class="rounded-lg object-cover w-60 h-60 shadow-md">
+        </div>
+        <div class="md:w-2/3">
+          <div class="flex items-center mb-4">
+            <h3 class="text-2xl font-semibold text-gray-700">引體向上 (Pull-up)</h3>
+            <span class="ml-3 px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">背部訓練</span>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">如何做</h4>
+            <p class="text-gray-600">
+              雙手握住單槓，手掌向前，寬度略寬於肩膀。從懸垂姿勢開始，利用背部和手臂力量將身體向上拉，直到下巴超過橫桿，然後緩慢下降回到起始位置。
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">注意重點</h4>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>避免過度擺動身體</li>
+              <li>專注於背部肌肉的收縮</li>
+              <li>下降時保持控制，不要快速下墜</li>
+              <li>初學者可使用輔助帶或彈力帶協助</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 啞鈴划船 -->
+      <div id="dumbbell-row" class="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row items-center gap-8 exercise-card">
+        <div class="md:w-1/3 flex justify-center">
+          <img src="{{ url_for('static', filename='img/啞鈴划船.png') }}" alt="啞鈴划船" class="rounded-lg object-cover w-60 h-60 shadow-md">
+        </div>
+        <div class="md:w-2/3">
+          <div class="flex items-center mb-4">
+            <h3 class="text-2xl font-semibold text-gray-700">啞鈴划船 (Dumbbell Row)</h3>
+            <span class="ml-3 px-3 py-1 bg-indigo-100 text-indigo-700 text-sm rounded-full">背部訓練</span>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">如何做</h4>
+            <p class="text-gray-600">
+              一手和同側膝蓋支撐在平凳上，另一手持啞鈴，上身與地面平行。保持背部挺直，將啞鈴向上拉至腰部位置，然後緩慢放下。完成一側後換另一側。
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold text-gray-600 mb-2">注意重點</h4>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>保持背部平直，避免駝背</li>
+              <li>肘部靠近身體，向後拉動</li>
+              <li>專注於肩胛骨的收縮</li>
+              <li>動作過程中保持頸部自然，不要過度抬頭</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 注意事項 -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-8 text-gray-700 section-title">健身注意事項</h2>
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700 flex items-center">
+              <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+              運動前準備
+            </h3>
+            <ul class="list-disc pl-6 space-y-3 text-gray-600">
+              <li>運動前需充分熱身，至少5-10分鐘</li>
+              <li>確保身體水分充足</li>
+              <li>穿著合適的運動服裝和鞋子</li>
+              <li>了解自己的身體狀況和限制</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700 flex items-center">
+              <i class="fas fa-heartbeat text-red-500 mr-2"></i>
+              運動中注意
+            </h3>
+            <ul class="list-disc pl-6 space-y-3 text-gray-600">
+              <li>保持正確呼吸與動作節奏</li>
+              <li>專注於目標肌群的收縮</li>
+              <li>如有不適，請立即停止運動</li>
+              <li>逐步增加重量，避免一次使用過高負荷</li>
+              <li>保持適當休息時間，避免過度訓練</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 開始訓練按鈕 -->
+    <div class="text-center mb-16">
+      <a href="/classroom" class="inline-block px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+        <i class="fas fa-play-circle mr-2"></i> 立即開始訓練
+      </a>
+      <p class="mt-3 text-gray-600">使用我們的AI教練，獲得即時姿勢指導</p>
+    </div>
+  </div>
+  
+  <!-- 頁腳 -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-xl font-bold mb-2">健身真簡單</h3>
+          <p class="text-gray-400">讓AI成為你的私人教練</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="mt-6 text-center text-gray-400 text-sm">
+        &copy; 2023 健身真簡單. 保留所有權利.
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // 簡單的平滑滾動效果
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>

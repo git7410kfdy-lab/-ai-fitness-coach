@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#f0f0f0"/>
+  <circle cx="100" cy="60" r="20" fill="#ffdbac"/>
+  <rect x="90" y="80" width="20" height="40" fill="#4a90e2"/>
+  <rect x="85" y="85" width="10" height="30" fill="#ffdbac"/>
+  <rect x="105" y="85" width="10" height="30" fill="#ffdbac"/>
+  <rect x="95" y="120" width="10" height="40" fill="#333"/>
+  <rect x="85" y="160" width="10" height="20" fill="#8b4513"/>
+  <rect x="105" y="160" width="10" height="20" fill="#8b4513"/>
+  <circle cx="130" cy="70" r="8" fill="#ff6b35"/>
+  <text x="100" y="190" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">Basketball Posture</text>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "mcp__github__create_repository",
+      "Bash(gh auth status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: AI Fitness Coach\n\n- YOLOv8 姿態檢測即時運動分析系統\n- 支援多種運動類型（深蹲、二頭彎舉、肩推、伏地挺身等）\n- 遊戲化健身體驗（關卡、怪物、Combo 系統）\n- Flask + Socket.IO 後端架構\n- 模組化前端 JavaScript 設計\n- Three.js 3D 場景渲染\n\n🤖 Generated with [Claude Code](https://claude.ai/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(xcopy:*)"
+    ]
+  }
+}

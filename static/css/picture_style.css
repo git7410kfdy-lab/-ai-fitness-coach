@@ -1,0 +1,332 @@
+/* 籃球投籃姿勢分析頁面樣式 */
+
+:root {
+    --primary-color: #ff6b35; /* 籃球橙色 */
+    --secondary-color: #004e89; /* 深藍色 */
+    --accent-color: #00a8e8; /* 亮藍色 */
+    --text-color: #333;
+    --light-color: #f8f9fa;
+    --light-gray: #f0f2f5;
+    --dark-gray: #555;
+    --success-color: #2ecc71;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    --gradient-bg: linear-gradient(135deg, #004e89 0%, #0077b6 100%);
+}
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="%23f0f2f5" stroke-width="1" fill="none"/></svg>');
+    background-size: 300px 300px;
+    animation: backgroundMove 60s linear infinite;
+}
+
+@keyframes backgroundMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 300px 300px; }
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.98);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2.5rem;
+    max-width: 90%;
+    width: 900px;
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient-bg);
+}
+
+.analysis-header {
+    margin-bottom: 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
+h1 {
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    position: relative;
+    font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.header-subtitle {
+    color: var(--dark-gray);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.image-container {
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    background-color: var(--light-gray);
+    padding: 0.5rem;
+}
+
+.analysis-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    transition: var(--transition);
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: none;
+}
+
+.image-container:hover .analysis-image {
+    transform: scale(1.02);
+}
+
+/* 角落標籤樣式 */
+.corner-label {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    z-index: 10;
+    transition: var(--transition);
+}
+
+.top-left {
+    top: 15px;
+    left: 15px;
+}
+
+.top-right {
+    top: 15px;
+    right: 15px;
+}
+
+.bottom-left {
+    bottom: 15px;
+    left: 15px;
+}
+
+.bottom-right {
+    bottom: 15px;
+    right: 15px;
+}
+
+.corner-label:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* 分析信息卡片 */
+.analysis-info {
+    margin: 2rem 0;
+}
+
+.info-card {
+    background-color: var(--light-gray);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    transition: var(--transition);
+    border-left: 4px solid var(--accent-color);
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.info-icon {
+    font-size: 2rem;
+    color: var(--accent-color);
+    margin-right: 1.5rem;
+}
+
+.info-content h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--secondary-color);
+    font-size: 1.3rem;
+}
+
+.info-content p {
+    margin: 0;
+    color: var(--dark-gray);
+    line-height: 1.5;
+}
+
+/* 按鈕樣式 */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background-color: #003a66;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+    background-color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: #e85a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* 添加響應式設計 */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+        width: 90%;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .header-icon {
+        font-size: 2rem;
+    }
+    
+    .header-subtitle {
+        font-size: 1rem;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .corner-label {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.6rem;
+    }
+    
+    .header-icon {
+        font-size: 1.8rem;
+    }
+    
+    .header-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .info-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .info-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .corner-label {
+        font-size: 0.7rem;
+        padding: 3px 6px;
+    }
+}

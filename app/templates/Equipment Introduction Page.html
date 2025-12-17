@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健身器材介紹</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .equipment-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .equipment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #3B82F6;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background-color: #3B82F6;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 導航欄 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="flex items-center space-x-2">
+                    <i class="fas fa-dumbbell text-blue-500 text-2xl"></i>
+                    <span class="font-bold text-xl text-gray-800">健身真簡單</span>
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="/" class="nav-link text-gray-600 hover:text-blue-500">首頁</a>
+                <a href="/exercise" class="nav-link text-gray-600 hover:text-blue-500">運動知識</a>
+                <a href="/equipment" class="nav-link text-blue-500 font-semibold">器材介紹</a>
+                <a href="/classroom" class="nav-link text-gray-600 hover:text-blue-500">開始訓練</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-gray-500 hover:text-blue-500 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 頁面標題 -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">健身器材介紹</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">了解各種健身器材的功能與使用方法，選擇適合自己的器材，讓健身效果事半功倍。</p>
+        </div>
+
+        <!-- 快速導航 -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-10">
+            <h2 class="text-lg font-semibold mb-4 text-gray-700">器材分類</h2>
+            <div class="flex flex-wrap gap-2">
+                <a href="#basic" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">基礎器材</a>
+                <a href="#weight" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">重量訓練器材</a>
+                <a href="#maintenance" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">器材保養建議</a>
+            </div>
+        </div>
+
+        <!-- 基礎器材 -->
+        <section id="basic" class="mb-16">
+            <h2 class="text-2xl font-semibold mb-8 text-gray-700 section-title">基礎器材</h2>
+
+            <!-- 啞鈴 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8 equipment-card">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/3 flex justify-center">
+                        <img src="{{ url_for('static', filename='img/啞鈴介紹.png') }}" alt="啞鈴" 
+                             class="rounded-lg object-cover w-60 h-60 shadow-md">
+                    </div>
+                    <div class="md:w-2/3">
+                        <div class="flex items-center mb-4">
+                            <h3 class="text-2xl font-semibold text-gray-700">啞鈴</h3>
+                            <span class="ml-3 px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full">初學者友好</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">最基本且實用的重量訓練器材，適合各種程度的健身愛好者。</p>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-600 mb-3">特點與用途</h4>
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-600">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>可調式啞鈴：方便調整重量</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>固定式啞鈴：重量固定，品質穩定</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>適合初學者入門使用</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>可進行多樣化訓練</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 彈力帶 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8 equipment-card">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/3 flex justify-center">
+                        <img src="{{ url_for('static', filename='img/彈力帶介紹.png') }}" alt="彈力帶" 
+                             class="rounded-lg object-cover w-60 h-60 shadow-md">
+                    </div>
+                    <div class="md:w-2/3">
+                        <div class="flex items-center mb-4">
+                            <h3 class="text-2xl font-semibold text-gray-700">彈力帶</h3>
+                            <span class="ml-3 px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">居家訓練</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">便攜、多功能的阻力訓練器材，適合各種場合使用。</p>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-600 mb-3">特點與用途</h4>
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-600">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>不同顏色代表不同阻力</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>適合居家訓練</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>可搭配其他器材使用</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>適合復健和肌力訓練</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 重量訓練器材 -->
+        <section id="weight" class="mb-16">
+            <h2 class="text-2xl font-semibold mb-8 text-gray-700 section-title">重量訓練器材</h2>
+
+            <!-- 槓鈴組 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8 equipment-card">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/3 flex justify-center">
+                        <img src="{{ url_for('static', filename='img/槓鈴組介紹.png') }}" alt="槓鈴組" 
+                             class="rounded-lg object-cover w-60 h-60 shadow-md">
+                    </div>
+                    <div class="md:w-2/3">
+                        <div class="flex items-center mb-4">
+                            <h3 class="text-2xl font-semibold text-gray-700">槓鈴組</h3>
+                            <span class="ml-3 px-3 py-1 bg-yellow-100 text-yellow-700 text-sm rounded-full">進階訓練</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">進階重量訓練必備器材，適合追求更高強度訓練的健身愛好者。</p>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-600 mb-3">特點與用途</h4>
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-600">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>奧林匹克槓片：規格標準</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>槓鈴：男女尺寸規格不同</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>適合複合式運動</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>需要確保安全措施</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 健身架 -->
+            <div class="bg-white rounded-lg shadow-md p-6 equipment-card">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/3 flex justify-center">
+                        <img src="{{ url_for('static', filename='img/健身架介紹.png') }}" alt="健身架" 
+                             class="rounded-lg object-cover w-60 h-60 shadow-md">
+                    </div>
+                    <div class="md:w-2/3">
+                        <div class="flex items-center mb-4">
+                            <h3 class="text-2xl font-semibold text-gray-700">健身架</h3>
+                            <span class="ml-3 px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">多功能訓練</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">多功能訓練站，適合全面性的力量訓練。</p>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-600 mb-3">特點與用途</h4>
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-600">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>適合自由重量訓練</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>內建安全保護裝置</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>可進行多種訓練動作</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>需要較大空間擺放</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 器材保養建議 -->
+        <section id="maintenance" class="mb-16">
+            <h2 class="text-2xl font-semibold mb-8 text-gray-700 section-title">器材保養建議</h2>
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-700 flex items-center">
+                            <i class="fas fa-tools text-blue-500 mr-2"></i>
+                            日常保養
+                        </h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>每次使用後擦拭器材表面</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>定期檢查器材狀況</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>保持器材清潔</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-700 flex items-center">
+                            <i class="fas fa-cog text-blue-500 mr-2"></i>
+                            定期維護
+                        </h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>適當潤滑活動零件</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>正確收納和擺放</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>定期更換耗材配件</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <h4 class="text-lg font-semibold text-blue-700 mb-2 flex items-center">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        保養小提示
+                    </h4>
+                    <p class="text-gray-600">
+                        良好的器材保養不僅能延長使用壽命，還能確保訓練安全。建議每月進行一次全面檢查，特別注意螺絲鬆緊、鋼纜磨損和活動部件潤滑情況。
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 開始訓練按鈕 -->
+        <div class="text-center mb-16">
+            <a href="/classroom" class="inline-block px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                <i class="fas fa-play-circle mr-2"></i> 立即開始訓練
+            </a>
+            <p class="mt-3 text-gray-600">使用我們的AI教練，獲得即時姿勢指導</p>
+        </div>
+    </div>
+    
+    <!-- 頁腳 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold mb-2">健身真簡單</h3>
+                    <p class="text-gray-400">讓AI成為你的私人教練</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="mt-6 text-center text-gray-400 text-sm">
+                &copy; 2023 健身真簡單. 保留所有權利.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 簡單的平滑滾動效果
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

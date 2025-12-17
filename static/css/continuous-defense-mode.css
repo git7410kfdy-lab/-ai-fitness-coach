@@ -1,0 +1,1154 @@
+/**
+ * Continuous Defense Mode Styles
+ * 持續抵擋模式樣式
+ */
+
+/* 模式控制面板 */
+.continuous-defense-panel {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 2px solid #0f3460;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 32px rgba(15, 52, 96, 0.3);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.continuous-defense-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    animation: defenseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes defenseGlow {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.mode-panel-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.mode-panel-header h3 {
+    color: #4ecdc4;
+    font-size: 1.5em;
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.mode-panel-header h3 i {
+    font-size: 1.2em;
+    animation: shieldPulse 2s ease-in-out infinite;
+}
+
+@keyframes shieldPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.mode-description {
+    color: #a8b2d1;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.mode-panel-body {
+    display: grid;
+    gap: 20px;
+}
+
+/* 設置區域 */
+.mode-settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.setting-group label {
+    color: #e2e8f0;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.setting-group input,
+.setting-group select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #e2e8f0;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.setting-group input:focus,
+.setting-group select:focus {
+    outline: none;
+    border-color: #4ecdc4;
+    box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.2);
+}
+
+/* 狀態顯示區域 */
+.mode-status {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.status-row:last-child {
+    margin-bottom: 0;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-label {
+    color: #a8b2d1;
+    font-size: 0.85em;
+}
+
+.status-value {
+    color: #4ecdc4;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+/* 控制按鈕 */
+.mode-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.mode-controls .button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.mode-controls .button.primary {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+}
+
+.mode-controls .button.primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #44a08d, #4ecdc4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+}
+
+.mode-controls .button.secondary {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+}
+
+.mode-controls .button.secondary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #495057, #6c757d);
+    transform: translateY(-2px);
+}
+
+.mode-controls .button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* 遊戲狀態顯示 */
+.defense-mode-status {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(26, 26, 46, 0.95);
+    border: 2px solid #0f3460;
+    border-radius: 12px;
+    padding: 15px;
+    min-width: 280px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.defense-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.defense-status-header h4 {
+    color: #4ecdc4;
+    margin: 0;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.defense-timer {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.1em;
+    animation: timerPulse 1s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 進度條容器 */
+.defense-progress-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.defense-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.defense-bar-label {
+    color: #e2e8f0;
+    font-size: 0.85em;
+    font-weight: 500;
+    min-width: 40px;
+}
+
+.defense-progress-bar {
+    flex: 1;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.defense-progress-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.defense-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: progressShine 2s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.shield-fill {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+}
+
+.hp-fill {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+}
+
+.defense-bar-value {
+    color: #a8b2d1;
+    font-size: 0.8em;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: right;
+}
+
+/* 怪物攻擊特效 */
+.monster-attack-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3em;
+    color: #ff6b6b;
+    text-shadow: 0 0 20px #ff6b6b;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    animation: attackPulse 0.5s ease-out;
+}
+
+.monster-attack-effect.attack-animation {
+    opacity: 1;
+    animation: attackFlash 0.8s ease-out;
+}
+
+/* 瘋狂攻擊特效 - 更激烈的動畫 */
+.monster-crazy-attack {
+    position: relative;
+    animation: crazyAttackShake 0.3s ease-in-out infinite;
+}
+
+.monster-crazy-attack::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: crazyAttackGlow 0.2s ease-in-out infinite alternate;
+    z-index: -1;
+}
+
+.monster-crazy-attack .monster-attack-effect {
+    font-size: 4em;
+    color: #ff1744;
+    text-shadow: 
+        0 0 10px #ff1744,
+        0 0 20px #ff1744,
+        0 0 30px #ff1744,
+        0 0 40px #ff1744;
+    animation: crazyAttackEffect 0.4s ease-out;
+}
+
+@keyframes crazyAttackShake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    10% { transform: translate(-3px, -2px) rotate(-1deg); }
+    20% { transform: translate(3px, 2px) rotate(1deg); }
+    30% { transform: translate(-2px, 3px) rotate(-1deg); }
+    40% { transform: translate(2px, -3px) rotate(1deg); }
+    50% { transform: translate(-3px, 2px) rotate(-1deg); }
+    60% { transform: translate(3px, -2px) rotate(1deg); }
+    70% { transform: translate(-2px, -3px) rotate(-1deg); }
+    80% { transform: translate(2px, 3px) rotate(1deg); }
+    90% { transform: translate(-1px, -2px) rotate(-1deg); }
+}
+
+@keyframes crazyAttackGlow {
+    0% { opacity: 0.3; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(1.1); }
+}
+
+@keyframes crazyAttackEffect {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+        filter: hue-rotate(0deg);
+    }
+    25% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.5) rotate(90deg);
+        filter: hue-rotate(90deg);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+        filter: hue-rotate(180deg);
+    }
+    75% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.8) rotate(270deg);
+        filter: hue-rotate(270deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5) rotate(360deg);
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes attackPulse {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes attackFlash {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        color: #ff6b6b;
+    }
+    25% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.3) rotate(90deg);
+        color: #ff4757;
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1) rotate(180deg);
+        color: #ff3838;
+    }
+    75% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.4) rotate(270deg);
+        color: #ff2f2f;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8) rotate(360deg);
+        color: #ff1e1e;
+    }
+}
+
+@keyframes attackEffect {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    40% {
+        transform: translate(-50%, -50%) scale(1) rotate(15deg);
+    }
+    60% {
+        transform: translate(-50%, -50%) scale(1) rotate(-15deg);
+    }
+    80% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}
+
+/* 護盾修復特效 */
+.shield-repair-effect {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5em;
+    color: #4ecdc4;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.shield-repair-effect.repair-animation {
+    animation: repairEffect 1.5s ease-out forwards;
+}
+
+@keyframes repairEffect {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3) translateY(50px);
+    }
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1) translateY(0px);
+    }
+    60% {
+        transform: translate(-50%, -50%) scale(1) translateY(-10px);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8) translateY(-30px);
+    }
+}
+
+/* 受傷效果 */
+.damage-flash {
+    animation: damageFlash 0.5s ease-out;
+}
+
+@keyframes damageFlash {
+    0%, 100% {
+        filter: none;
+    }
+    25% {
+        filter: brightness(1.5) saturate(1.5) hue-rotate(0deg);
+    }
+    50% {
+        filter: brightness(0.8) saturate(2) hue-rotate(180deg);
+    }
+    75% {
+        filter: brightness(1.2) saturate(1.2) hue-rotate(90deg);
+    }
+}
+
+/* 怪物移動動畫 */
+.monster-moving {
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1001;
+}
+
+.monster-moving::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.2), rgba(255, 71, 87, 0.2));
+    border-radius: 8px;
+    animation: movingGlow 0.5s ease-in-out;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 怪物追擊移動效果 */
+.monster-charging {
+    animation: monsterCharge 0.8s ease-out;
+    transform-origin: center;
+}
+
+.monster-charging::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: conic-gradient(from 0deg, #ff1744, #ff5722, #ff9800, #ffeb3b, #4caf50, #2196f3, #9c27b0, #ff1744);
+    border-radius: 50%;
+    animation: chargeRotate 0.8s linear;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.monster-charging .monster-attack-effect {
+    font-size: 5em;
+    color: #ff1744;
+    text-shadow: 
+        0 0 15px #ff1744,
+        0 0 30px #ff1744,
+        0 0 45px #ff1744;
+    animation: chargeAttackEffect 0.8s ease-out;
+}
+
+@keyframes monsterCharge {
+    0% {
+        transform: scale(1) rotate(0deg);
+        filter: brightness(1);
+    }
+    25% {
+        transform: scale(1.1) rotate(5deg);
+        filter: brightness(1.2);
+    }
+    50% {
+        transform: scale(0.95) rotate(-3deg);
+        filter: brightness(1.4);
+    }
+    75% {
+        transform: scale(1.05) rotate(2deg);
+        filter: brightness(1.1);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        filter: brightness(1);
+    }
+}
+
+@keyframes chargeRotate {
+    0% {
+        transform: rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes chargeAttackEffect {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+        filter: hue-rotate(0deg) brightness(1);
+    }
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(2);
+        filter: hue-rotate(120deg) brightness(1.5);
+    }
+    60% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.5);
+        filter: hue-rotate(240deg) brightness(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3);
+        filter: hue-rotate(360deg) brightness(0.8);
+    }
+}
+
+@keyframes movingGlow {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+#monster-container {
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+#monster-container.monster-moving {
+    animation: monsterMovement 1s ease-in-out;
+}
+
+@keyframes monsterMovement {
+    0% {
+        filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.8));
+        transform: scale(1.05);
+    }
+    100% {
+        filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.5));
+    }
+}
+
+/* 怪物爆炸效果 */
+.monster-explosion {
+    position: relative;
+    animation: monsterExplode 2s ease-out forwards;
+}
+
+.monster-explosion::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, #ffeb3b 0%, #ff9800 30%, #ff5722 60%, #f44336 100%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: explosionExpand 1.5s ease-out;
+    z-index: 10;
+}
+
+.monster-explosion::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: explosionFlash 0.3s ease-out;
+    z-index: 11;
+}
+
+@keyframes monsterExplode {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+        filter: brightness(1);
+    }
+    20% {
+        transform: scale(1.2) rotate(10deg);
+        opacity: 1;
+        filter: brightness(1.5);
+    }
+    40% {
+        transform: scale(0.8) rotate(-5deg);
+        opacity: 1;
+        filter: brightness(2);
+    }
+    60% {
+        transform: scale(1.5) rotate(15deg);
+        opacity: 0.8;
+        filter: brightness(3) blur(2px);
+    }
+    80% {
+        transform: scale(2) rotate(-10deg);
+        opacity: 0.4;
+        filter: brightness(4) blur(4px);
+    }
+    100% {
+        transform: scale(3) rotate(0deg);
+        opacity: 0;
+        filter: brightness(5) blur(8px);
+    }
+}
+
+/* 傷害彈出動畫 */
+.damage-popup {
+    position: absolute;
+    font-size: 2em;
+    font-weight: bold;
+    color: #ff6b6b;
+    z-index: 1000;
+    pointer-events: none;
+    animation: damagePopup 1s ease-out forwards;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes damagePopup {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -60%) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -80%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* 護盾修復彈出動畫 */
+.shield-repair-popup {
+    position: absolute;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #4ecdc4;
+    z-index: 1000;
+    pointer-events: none;
+    animation: shieldRepairPopup 1s ease-out forwards;
+    text-shadow: 0 0 10px #4ecdc4;
+}
+
+.shield-repair-popup.combo {
+    animation: shieldRepairCombo 1.2s ease-out forwards;
+    font-size: 2.2em;
+    color: #2ecc71;
+}
+
+@keyframes shieldRepairPopup {
+    0% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 0;
+    }
+    30% {
+        transform: translate(-50%, -60%) scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -90%) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes shieldRepairCombo {
+    0% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -60%) scale(1.3);
+        opacity: 1;
+        text-shadow: 0 0 15px #2ecc71;
+    }
+    40% {
+        transform: translate(-50%, -70%) scale(1.1);
+    }
+    100% {
+        transform: translate(-50%, -100%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* 血量條傷害閃爍 */
+.hp-fill.damage-flash {
+    animation: hpDamageFlash 0.5s ease-out;
+}
+
+@keyframes hpDamageFlash {
+    0%, 100% {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        box-shadow: 0 0 5px #ff6b6b;
+    }
+    50% {
+        background: linear-gradient(135deg, #ff1744, #c62828);
+        box-shadow: 0 0 15px #ff1744;
+    }
+}
+
+/* 護盾條修復閃爍 */
+.shield-fill.repair-flash {
+    animation: shieldRepairFlash 0.5s ease-out;
+}
+
+@keyframes shieldRepairFlash {
+    0%, 100% {
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        box-shadow: 0 0 5px #4ecdc4;
+    }
+    50% {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        box-shadow: 0 0 15px #2ecc71;
+    }
+}
+
+@keyframes explosionExpand {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    50% {
+        width: 300px;
+        height: 300px;
+        opacity: 0.8;
+    }
+    100% {
+        width: 500px;
+        height: 500px;
+        opacity: 0;
+    }
+}
+
+@keyframes explosionFlash {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(4);
+    }
+}
+
+/* 爆炸粒子效果 */
+.explosion-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #ffeb3b;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 12;
+}
+
+.explosion-particle:nth-child(1) { animation: particle1 1.5s ease-out; }
+.explosion-particle:nth-child(2) { animation: particle2 1.5s ease-out; }
+.explosion-particle:nth-child(3) { animation: particle3 1.5s ease-out; }
+.explosion-particle:nth-child(4) { animation: particle4 1.5s ease-out; }
+.explosion-particle:nth-child(5) { animation: particle5 1.5s ease-out; }
+.explosion-particle:nth-child(6) { animation: particle6 1.5s ease-out; }
+.explosion-particle:nth-child(7) { animation: particle7 1.5s ease-out; }
+.explosion-particle:nth-child(8) { animation: particle8 1.5s ease-out; }
+
+@keyframes particle1 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(100px, -80px) scale(0); opacity: 0; }
+}
+
+@keyframes particle2 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(-100px, -60px) scale(0); opacity: 0; }
+}
+
+@keyframes particle3 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(80px, 100px) scale(0); opacity: 0; }
+}
+
+@keyframes particle4 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(-80px, 90px) scale(0); opacity: 0; }
+}
+
+@keyframes particle5 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(120px, 20px) scale(0); opacity: 0; }
+}
+
+@keyframes particle6 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(-120px, -20px) scale(0); opacity: 0; }
+}
+
+@keyframes particle7 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(60px, -120px) scale(0); opacity: 0; }
+}
+
+@keyframes particle8 {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(-60px, 120px) scale(0); opacity: 0; }
+}
+
+/* 結果模態框 */
+.defense-result-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.defense-result-modal.active {
+    opacity: 1;
+}
+
+.defense-result-modal .modal-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 2px solid #0f3460;
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.defense-result-modal.active .modal-content {
+    transform: scale(1);
+}
+
+.defense-result-modal .modal-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.defense-result-modal .modal-header h2 {
+    margin: 0;
+    font-size: 2em;
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.victory-modal .modal-header h2 {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.defeat-modal .modal-header h2 {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.result-message {
+    text-align: center;
+    color: #e2e8f0;
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.result-stats {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: #a8b2d1;
+    font-size: 0.95em;
+}
+
+.stat-value {
+    color: #4ecdc4;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.defense-result-modal .modal-footer {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.defense-result-modal .modal-footer .button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.defense-result-modal .modal-footer .button.primary {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+}
+
+.defense-result-modal .modal-footer .button.primary:hover {
+    background: linear-gradient(135deg, #44a08d, #4ecdc4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+}
+
+.defense-result-modal .modal-footer .button.secondary {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+}
+
+.defense-result-modal .modal-footer .button.secondary:hover {
+    background: linear-gradient(135deg, #495057, #6c757d);
+    transform: translateY(-2px);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .mode-settings {
+        grid-template-columns: 1fr;
+    }
+    
+    .status-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .defense-mode-status {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 10px;
+        min-width: auto;
+    }
+    
+    .mode-controls {
+        flex-direction: column;
+    }
+    
+    .defense-result-modal .modal-content {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .defense-result-modal .modal-footer {
+        flex-direction: column;
+    }
+}
+
+/* 動畫優化 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 高對比度模式支持 */
+@media (prefers-contrast: high) {
+    .continuous-defense-panel {
+        border-color: #ffffff;
+        background: #000000;
+    }
+    
+    .defense-mode-status {
+        border-color: #ffffff;
+        background: #000000;
+    }
+    
+    .status-value,
+    .defense-status-header h4 {
+        color: #ffffff;
+    }
+}
+
+/* 深色主題優化 */
+@media (prefers-color-scheme: dark) {
+    .continuous-defense-panel {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        border-color: #333333;
+    }
+    
+    .defense-mode-status {
+        background: rgba(10, 10, 10, 0.95);
+        border-color: #333333;
+    }
+}

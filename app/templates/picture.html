@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>籃球投籃姿勢分析</title>
+    <!-- 引入Google字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- 引入Font Awesome圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- 引入外部CSS文件 -->
+    <link rel="stylesheet" href="/static/css/picture_style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <header class="analysis-header">
+                <div class="header-icon"><i class="fas fa-basketball-ball"></i></div>
+                <h1>籃球投籃姿勢分析</h1>
+                <div class="header-subtitle">精準捕捉關鍵動作瞬間</div>
+            </header>
+            
+            <!-- 圖片容器 -->
+            <div class="image-container">
+                <!-- 此處圖片來源 /four_grid_image 需要後端 Flask 路由處理，
+                     從 static/captures/ 讀取籃球截圖並返回圖像 -->
+                <img src="/exercise/four_grid_image" alt="四公格圖片" class="analysis-image">
+                
+                <!-- 添加圖片角落標記 -->
+                <div class="corner-label top-left">準備階段</div>
+                <div class="corner-label top-right">上升階段</div>
+                <div class="corner-label bottom-left">釋放階段</div>
+                <div class="corner-label bottom-right">跟隨動作</div>
+            </div>
+            
+            <!-- 分析說明區域 -->
+            <div class="analysis-info">
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="info-content">
+                        <h3>動作分析</h3>
+                        <p>四格圖展示了投籃動作的完整過程，幫助您分析並改進技術細節。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作按鈕區 -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='/exercise/realtime'">
+                    <i class="fas fa-arrow-left"></i> 返回偵測頁面
+                </button>
+                <button class="btn btn-secondary" onclick="window.print()">
+                    <i class="fas fa-print"></i> 列印分析
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

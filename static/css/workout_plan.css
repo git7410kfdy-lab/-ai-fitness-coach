@@ -1,0 +1,271 @@
+/* 訓練計劃相關樣式 */
+
+/* 訓練計劃模態窗口 */
+.workout-plan-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.workout-plan-item {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.workout-plan-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.plan-item-header {
+    background: linear-gradient(135deg, var(--primary-color), #2980b9);
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.plan-item-number {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.remove-exercise-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.remove-exercise-btn:hover {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.1);
+}
+
+.plan-item-body {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.plan-description {
+    margin-bottom: 20px;
+    color: #666;
+    line-height: 1.5;
+    background-color: rgba(52, 152, 219, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+#add-exercise-btn {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* 訓練計劃摘要 */
+.workout-plan-summary {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.plan-summary-title {
+    background: linear-gradient(135deg, var(--primary-color), #2980b9);
+    color: white;
+    padding: 12px 15px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.plan-exercises {
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.plan-exercise-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s ease;
+}
+
+.plan-exercise-item:last-child {
+    border-bottom: none;
+}
+
+.plan-exercise-item.active {
+    background-color: rgba(52, 152, 219, 0.1);
+    border-left: 3px solid var(--primary-color);
+}
+
+.plan-exercise-item.completed {
+    background-color: rgba(46, 204, 113, 0.1);
+    border-left: 3px solid var(--secondary-color);
+}
+
+.exercise-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: var(--dark-color);
+    font-size: 1.2rem;
+}
+
+.plan-exercise-item.active .exercise-icon {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.plan-exercise-item.completed .exercise-icon {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.exercise-details {
+    flex: 1;
+}
+
+.exercise-name {
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.exercise-target {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.exercise-progress {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.completed-sets {
+    color: var(--secondary-color);
+}
+
+.no-plan {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+
+/* 休息提示模態窗口 */
+.rest-timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.rest-timer {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 5px;
+}
+
+.rest-timer-label {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.next-exercise-info {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.next-exercise-info h3 {
+    margin-bottom: 15px;
+    color: var(--dark-color);
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.next-exercise-details {
+    display: flex;
+    align-items: center;
+}
+
+.next-exercise-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    color: white;
+    font-size: 1.8rem;
+}
+
+.next-exercise-text {
+    flex: 1;
+}
+
+.next-exercise-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.next-exercise-target {
+    font-size: 1rem;
+    color: #666;
+}
+
+#skip-rest-btn {
+    width: 100%;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .plan-item-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .next-exercise-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    
+    .next-exercise-name {
+        font-size: 1.1rem;
+    }
+}
