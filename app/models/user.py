@@ -34,6 +34,10 @@ def load_user(user_id):
         
         if user_data:
             logger.debug(f"成功載入使用者: {user_data['username']}")
+
+            from flask import session
+            session['user_id'] = user_data['username']
+            
             return User(user_data['user_id'], user_data['username'], user_data['role'])
         else:
             logger.warning(f"未找到使用者ID: {user_id}")

@@ -781,8 +781,8 @@ def record_exercise():
         # 根據資料表結構，不包含 completion_time 欄位
         insert_query = """
         INSERT INTO exercise_info 
-        (student_id, exercise_type, weight, reps, sets, timestamp, total_count, game_level)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, (SELECT MAX(level) FROM game_levels WHERE student_id = %s))
+        (student_id, exercise_type, weight, reps, sets, rpe, timestamp, total_count, game_level)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, (SELECT MAX(level) FROM game_levels WHERE student_id = %s))
         """
         
         cursor.execute(insert_query, (
@@ -790,7 +790,8 @@ def record_exercise():
             exercise_type, 
             weight, 
             reps, 
-            sets, 
+            sets,
+            None, 
             current_time,
             total_count,
             student_id

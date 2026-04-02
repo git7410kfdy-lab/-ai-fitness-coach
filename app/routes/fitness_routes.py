@@ -149,13 +149,20 @@ def fitness_dashboard():
         """, (user_id,))
         total_calories = cursor.fetchone()['total_calories'] or 0
 
-        # 3. 計算總訓練時間
+        # 3. 計算總訓練時間(按天計算跨度並加總)
+        # 邏輯：每一天當作一個 Session，計算當天最晚與最早紀錄的差值
         cursor.execute("""
-            SELECT TIMESTAMPDIFF(MINUTE, MIN(timestamp), MAX(timestamp)) as total_duration
-            FROM exercise_info
-            WHERE student_id = %s
+            SELECT SUM(daily_diff) as total_duration
+            FROM (
+                SELECT TIMESTAMPDIFF(MINUTE, MIN(timestamp), MAX(timestamp)) as daily_diff
+                FROM exercise_info
+                WHERE student_id = %s
+                GROUP BY DATE(timestamp)
+            ) as daily_stats
         """, (user_id,))
-        total_training_time = cursor.fetchone()['total_duration'] or 0
+        result = cursor.fetchone()
+        # 為了避免當天只有一筆紀錄算出來是 0，可以給個基本的保底值 (例如每組加 1 分鐘)
+        total_training_time = result['total_duration'] or 0
         
         # 4. 計算訓練頻率
         cursor.execute("""

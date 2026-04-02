@@ -640,6 +640,9 @@ def record_workout_plan():
         cursor = conn.cursor()
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         for exercise in plan:
+
+            rpe_val = exercise.get('rpe', None)
+
             cursor.execute(
                 """
                 INSERT INTO exercise_info (student_id, exercise_type, weight, reps, sets, timestamp, total_count, game_level)
@@ -651,6 +654,7 @@ def record_workout_plan():
                     exercise.get('weight', 0),
                     exercise.get('reps', 10),
                     exercise.get('sets', 1),
+                    rpe_val,
                     now,
                     exercise.get('reps', 10),
                     exercise.get('game_level', 1)

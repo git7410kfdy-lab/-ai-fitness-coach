@@ -69,3 +69,8 @@ Thumbs.db
 tempCodeRunnerFile.py
 *.tmp
 *.temp
+
+# API
+venv/
+.env
+__pycache__/

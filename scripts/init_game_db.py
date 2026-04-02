@@ -31,6 +31,14 @@ def create_game_tables():
             
         cursor = conn.cursor()
 
+        if not ensure_users_table():
+            logger.error("確保 users 表失敗")
+            return False
+            
+        if not ensure_user_body_stats_table():
+            logger.error("確保 user_body_stats 表失敗")
+            return False
+
         # 添加新的表格創建
         if not ensure_exercise_info_table():
             logger.error("創建 exercise_info 表失敗")
@@ -289,6 +297,7 @@ def ensure_exercise_info_table():
                 weight INT NOT NULL DEFAULT 0,
                 reps INT NOT NULL DEFAULT 10,
                 sets INT NOT NULL DEFAULT 3,
+                rpe INT DEFAULT NULL,
                 timestamp DATETIME NOT NULL,
                 total_count INT NOT NULL DEFAULT 0,
                 game_level INT DEFAULT NULL
@@ -312,6 +321,9 @@ def ensure_exercise_info_table():
             if 'total_count' not in columns:
                 cursor.execute("ALTER TABLE exercise_info ADD COLUMN total_count INT NOT NULL DEFAULT 0")
                 logger.info("添加 total_count 列到 exercise_info 表")
+            if 'rpe' not in columns:
+                cursor.execute("ALTER TABLE exercise_info ADD COLUMN rpe INT DEFAULT NULL")
+                logger.info("添加 rpe 列到 exercise_info 表")
         
         conn.commit()
         cursor.close()
@@ -374,6 +386,62 @@ def ensure_user_achievements_table():
         logger.error(f"確保 user_achievements 表結構正確時出錯: {e}")
         return False
 
+
+
+def ensure_user_body_stats_table():
+    """確保 user_body_stats 表結構與 API 需求一致"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return False
+            
+        cursor = conn.cursor()
+        
+        # 1. 檢查表是否存在
+        cursor.execute("SHOW TABLES LIKE 'user_body_stats'")
+        table_exists = cursor.fetchone()
+        
+        if not table_exists:
+            # 如果表不存在，直接創建包含所有欄位的結構
+            cursor.execute("""
+            CREATE TABLE user_body_stats (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id VARCHAR(50) NOT NULL,
+                user_name VARCHAR(100),
+                height FLOAT NOT NULL,
+                weight FLOAT NOT NULL,
+                age INT NOT NULL,
+                bmi FLOAT,
+                created_at DATETIME NOT NULL,
+                updated_at DATETIME NOT NULL,
+                recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            """)
+            logger.info("✅ 成功創建完整的 user_body_stats 表")
+        else:
+            # 2. 如果表已存在，檢查是否缺少欄位 (重要：防止欄位不對導致的崩潰)
+            cursor.execute("DESCRIBE user_body_stats")
+            columns = [col[0] for col in cursor.fetchall()]
+            
+            # 檢查並補齊缺失的欄位
+            if 'user_name' not in columns:
+                cursor.execute("ALTER TABLE user_body_stats ADD COLUMN user_name VARCHAR(100) AFTER user_id")
+            if 'created_at' not in columns:
+                cursor.execute("ALTER TABLE user_body_stats ADD COLUMN created_at DATETIME NOT NULL AFTER bmi")
+            if 'updated_at' not in columns:
+                cursor.execute("ALTER TABLE user_body_stats ADD COLUMN updated_at DATETIME NOT NULL AFTER created_at")
+            
+            logger.info("✅ user_body_stats 表結構檢查與補齊完成")
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return True
+    except Exception as e:
+        logger.error(f"❌ 確保 user_body_stats 表出錯: {e}")
+        return False
+    
 
 def ensure_users_table():
     """確保 users 表結構正確"""

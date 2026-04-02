@@ -11,7 +11,7 @@ class Config:
     DB_CONFIG = {
         'host': '127.0.0.1',
         'user': 'root',
-        'password': '1234',
+        'password': '',
         'database': 'nkust_exercise'
     } #no!!
     @staticmethod

@@ -396,7 +396,79 @@
                                 </div>
                             </div>
                         </div>
-                        
+
+                        <!--  AI 專屬教練諮詢 -->
+                        <div id="ai-coach-section" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                            <h5 style="color: #2c3e50; font-weight: bold; margin-bottom: 15px;"> AI 專屬教練諮詢</h5>
+    
+                            <div id="chat-messages" style="height: 500px; overflow-y: auto; background: #fdfdfd; padding: 15px; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                                <div class="message coach" style="color: #666; font-size: 15px;">
+                                    <b>教練：</b>你好！我是你的 AI 健身教練，今天想練什麼？
+                                </div>
+                            </div>
+
+                            <div id="ai-coach-input-area" style="margin-top: 15px;">
+                                <input type="text" id="coach-input" class="form-control" placeholder=" 詢問教練建議..."
+                                       style="width: 100%;
+                                       height: 50px;
+                                       border-radius: 4px;
+                                       margin-bottom: 10px;
+                                       font-size: 16px;
+                                       border: 1px solid #ced4da;
+                                       box-sizing: border-box;">
+                                       
+                                <button class="btn btn-primary coach-send-btn" type="button" onclick="askCoach()"
+                                    style="background-color: #3498db;
+                                    border-color: #3498db;
+                                    width: 100%;
+                                    height: 50px;
+                                    font-weight: bold;
+                                    border-radius: 4px; /* 平時維持跟左側一樣的方正 */
+                                    color: white;
+                                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 增加一點彈性的轉場 */
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);">   
+                                    發送
+                                </button>
+                            </div>
+                        </div>
+
+                        <style>
+                            /* 滑鼠移上去稍微變深 */
+                            .coach-send-btn:hover {
+                            position: relative;
+                            width: 100%;
+                            height: 50px;
+                            background-color: #3498db; /* 原本的藍色 */
+                            border: none;
+                            border-radius: 4px;        /* 原本的方正形狀 */
+                            color: white;
+                            font-weight: bold;
+                            font-size: 16px;
+                            overflow: hidden;          /* 確保內層圓滑效果不會超出本體 */
+                            z-index: 1;
+                            transition: none;
+                            }
+                            /* 圓滑的疊加層 (Hover 時才變大) */
+                            .coach-send-btn::before {
+                                content: "";
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                width: 0%;
+                                height: 0%;
+                                background-color: #2471a3; /* 滑上去變深的顏色 */
+                                border-radius: 20px;       /* 固定圓滑形狀 */
+                                transform: translate(-50%, -50%);
+                                z-index: -1;               /* 放在文字下面 */
+                                transition: none;
+                            }
+                            /* 滑鼠移上去：本體藍色矩形不變，深色圓滑塊擴散開來 */
+                            .coach-send-btn:hover::before {
+                                width: 105%; /* 擴大覆蓋原本的矩形 */
+                                height: 150%;
+                                transition: width 0.4s ease-out, height 0.4s ease-out; /* 只有進去有動畫 */
+                            }
+                        </style>
                         <!-- 特定運動控制元素保持不變 -->
                         <div id="basketball-controls" class="exercise-specific-controls" style="display: none;">
                             <div class="card">
@@ -788,4 +860,168 @@
             });
         });
     </script>
+{% raw %}
+<script>
+    async function askCoach() {
+    const input = document.getElementById('coach-input');
+    const messages = document.getElementById('chat-messages');
+    const userText = input.value.trim();
+    if (!userText) return;
+
+    // 顯示使用者訊息
+    messages.innerHTML += `<div style="text-align: right; margin-bottom: 12px;"><span style="background-color: #e3f2fd; padding: 8px 12px; border-radius: 10px; display: inline-block; color: #1976d2;"><b>你：</b>${userText}</span></div>`;
+    input.value = '';
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userText })
+        });
+        const data = await response.json();
+        
+        // --- 核心修正處 ---
+        let aiReply = data.reply; // 統一使用 aiReply 變數名稱
+
+        if (aiReply) {
+            let exerciseDataList = [];
+            // 匹配 [POPUP_CONFIRM: [...] ] 標籤
+            const tagRegex = /\[POPUP_CONFIRM:\s*(\[[\s\S]*?\])\s*\]/g;
+            let match;
+            let rawTags = [];
+
+            while ((match = tagRegex.exec(aiReply)) !== null) {
+                rawTags.push(match[0]);
+                try {
+                    // 清理並解析 JSON
+                    let cleanJson = match[1].trim().replace(/[\r\n\t]+/g, "");
+                    const parsed = JSON.parse(cleanJson);
+                    exerciseDataList = exerciseDataList.concat(Array.isArray(parsed) ? parsed : [parsed]);
+                } catch (e) {
+                    console.error("❌ JSON 解析失敗:", e);
+                }
+            }
+
+            // 1. 清理掉回覆中的所有標籤 (包含可能殘留的 RPE 標籤)
+            let displayReply = aiReply;
+            rawTags.forEach(tag => displayReply = displayReply.replace(tag, ""));
+            displayReply = displayReply.replace(/\[UPDATE_RPE:\s*\d+\]/g, "").trim();
+
+            // 2. 顯示教練回覆
+            if (displayReply.length > 0) {
+                messages.innerHTML += `<div style="text-align: left; margin-bottom: 15px;"><div style="background-color: #f1f1f1; padding: 12px 16px; border-radius: 12px; display: inline-block; color: #333; line-height: 1.6; white-space: pre-wrap; max-width: 90%; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);"><b style="color: #2e7d32;">教練：</b>\n${displayReply}</div></div>`;
+            }
+
+            // 3. 執行自動填表
+            if (exerciseDataList.length > 0) {
+                await runAutoFillSequence(exerciseDataList);
+            }     
+            
+            messages.scrollTop = messages.scrollHeight;
+        }
+            
+    } catch (error) {
+        console.error("Fetch Error:", error);
+    }
+}
+
+    // --- 核心修正：嚴格疊加邏輯 ---
+    async function runAutoFillSequence(exercises) {
+        console.log(`🚀 開始處理 ${exercises.length} 個動作的疊加...`);
+
+        for (let i = 0; i < exercises.length; i++) {
+            const ex = exercises[i];
+            
+            // 每次填寫前，重新抓取 DOM
+            let selects = document.querySelectorAll('select[name="exercise-type[]"]');
+            let repsInputs = document.querySelectorAll('input[name="reps[]"]');
+            let setsInputs = document.querySelectorAll('input[name="sets[]"]');
+            
+            
+            let lastRowIdx = selects.length - 1;
+            let targetIndex;
+
+            // 【關鍵修改】：不再檢查 weight 是否為 0 (避免誤殺自重訓練)
+            // 判斷標準：如果「次數」或「組數」有值，就代表這行被用過了 -> 必須新增
+            let currentReps = repsInputs[lastRowIdx] ? repsInputs[lastRowIdx].value : "";
+            let currentSets = setsInputs[lastRowIdx] ? setsInputs[lastRowIdx].value : "";
+
+            // 如果是完全空白的初始行 (通常是剛進頁面時的第一行)
+            // 條件：只有一行 且 次數是空 且 組數是空
+            let isTrulyEmptyStart = (selects.length === 1 && (currentReps === "" || currentReps === "0") && (currentSets === "" || currentSets === "0"));
+
+            if (isTrulyEmptyStart) {
+                // 情境 A：畫面只有一行且是空的 -> 直接填入
+                targetIndex = lastRowIdx;
+                console.log(`📍 初始空行，直接填入 (Index ${targetIndex})`);
+            } else {
+                // 情境 B：不管最後一行重量是多少，只要有填次數/組數，或者已經有多行 -> 全部按新增
+                const addBtn = document.getElementById('add-exercise-btn');
+                if (addBtn) {
+                    addBtn.click();
+                    console.log("➕ 執行疊加 (Append Mode)");
+                    
+                    // 等待瀏覽器渲染新行 (稍微拉長到 250ms 確保手機版也正常)
+                    await new Promise(r => setTimeout(r, 250));
+                    
+                    // 重新抓取
+                    let updatedSelects = document.querySelectorAll('select[name="exercise-type[]"]');
+                    targetIndex = updatedSelects.length - 1; 
+                }
+            }
+
+            if (targetIndex !== undefined) {
+                fillSingleRow(targetIndex, ex);
+                // 填完單行後稍等，確保資料寫入
+                await new Promise(r => setTimeout(r, 100));
+            }
+        }
+
+        // 所有動作處理完畢後，執行存檔
+        setTimeout(() => {
+            const saveBtn = document.getElementById('save-workout-plan');
+            if (saveBtn) {
+                console.log("💾 全部疊加完成，執行自動儲存！");
+                saveBtn.click();
+            }
+        }, 800);
+    }
+
+    function fillSingleRow(index, data) {
+        const types = document.querySelectorAll('select[name="exercise-type[]"]');
+        const rs = document.querySelectorAll('input[name="reps[]"]');
+        const ss = document.querySelectorAll('input[name="sets[]"]');
+
+        if (types[index]) {
+            const select = types[index];
+            const targetName = data.name.trim();
+            
+            // 確保找到對應選項
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].text.trim() === targetName) {
+                    select.selectedIndex = i;
+                    // 【雙重事件觸發】確保前端框架 (Vue/React/Vanilla) 都能抓到變更
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    select.dispatchEvent(new Event('input', { bubbles: true }));
+                    break;
+                }
+            }
+        }
+        
+        if (rs[index]) {
+            rs[index].value = data.reps;
+            rs[index].dispatchEvent(new Event('input', { bubbles: true }));
+            rs[index].dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        
+        if (ss[index]) {
+            ss[index].value = data.sets;
+            ss[index].dispatchEvent(new Event('input', { bubbles: true }));
+            ss[index].dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+    }
+</script>
+{% endraw %}
 </body>

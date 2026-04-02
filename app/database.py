@@ -16,7 +16,8 @@ def get_db_connection():
             host=db_config['host'],
             database=db_config['database'],
             user=db_config['user'],
-            password=db_config['password']
+            password=db_config['password'],
+            use_pure=True
         )
         if conn.is_connected():
             return conn
