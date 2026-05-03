@@ -2000,29 +2000,60 @@ canvas {
     justify-content: center;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* 增加凹陷感 */
+    border-radius: 12px;
     position: relative;
     overflow: hidden;
 }
 
 .height-indicator {
-    width: 8px;
-    background: linear-gradient(180deg, var(--primary), var(--secondary));
-    border-radius: 4px;
-    transition: height 0.5s ease;
-    min-height: 20px;
+/* 1. 寬度：確保它像一根柱子，不要只是個點 */
+    width: 14px !important;
+    
+    /* 2. 對齊：這是最關鍵的！強制它靠底部對齊 */
+    /* 這樣 JS 的 height: % 才會從下面往上長 */
+    align-self: flex-end; 
+    
+    /* 3. 外觀：設定顏色與圓角 */
+    background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%) !important;
+    border-radius: 4px 4px 0 0;
+    
+    /* 4. 動畫：讓它長大時有平滑感 */
+    transition: height 0.5s ease-out;
+    box-shadow: 0 0 8px rgba(79, 172, 254, 0.5);
+    border-radius: 4px 4px 0 0;
+    
+    /* 5. 補上一點點邊距，讓它不要貼死最底線 */
+    margin-bottom: 2px;
 }
 
 .weight-indicator {
+/* 1. 確保它是個圓球，而不是只有數字 */
     width: 40px;
     height: 40px;
-    background: radial-gradient(circle, var(--primary), var(--secondary));
+    background: radial-gradient(circle, var(--primary), var(--secondary)) !important;
     border-radius: 50%;
-    transition: transform 0.5s ease;
-    display: flex;
+    
+    /* 2. 核心修正：確保數字在圓球正中央 */
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    color: var(--white);
-    font-weight: bold;
+    
+    /* 3. 動畫與縮放基準 */
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center center;
+
+    /* 4. 文字樣式：固定大小，不要跟著球一起變巨大 */
+    background: radial-gradient(circle, #f59e0b, #d97706) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    
+    /* 5. 增加陰影，讓這顆球從灰色背景中跳出來 */
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); /* 或者保持你的亮橘 */
+    box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4); /* 加上帶顏色的陰影會更透亮 */
+    font-size: 14px !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .age-indicator {
@@ -2035,15 +2066,27 @@ canvas {
 }
 
 .age-indicator::after {
+/* 核心修正 1：把半透明改成完全不透明的亮白色 */
+    /* 這行能解決你說的「怪怪的」感覺 */
+    background: #FFFFFF !important; 
+    
+    /* 核心修正 2：加上明顯的陰影，讓它浮出來，有實體感 */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+
+    /* 核心修正 3：確保它在最前面，不會被紅條壓住 */
+    z-index: 10 !important;
+
+    /* 你原本的定位屬性（保持不動） */
     content: '';
     position: absolute;
-    top: -6px;
-    width: 20px;
-    height: 20px;
-    background: var(--accent);
+    top: 50%;
+    left: var(--age-position, 0%);
+    transform: translate(-50%, -50%);
+    width: 22px; /* 稍微放大一點點，視覺更協調 */
+    height: 22px;
     border-radius: 50%;
-    transition: left 0.5s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease;
+    cursor: pointer;
 }
 
 /* BMI 顯示卡片 */
@@ -2071,16 +2114,58 @@ canvas {
 }
 
 .bmi-icon {
+    /* 1. 基礎尺寸與形狀 */
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-radius: 50%;
+    
+    /* 2. 背景漸層：營造立體感的核心色彩 */
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); 
+    
+    /* 3. 佈局：確保內部的圖示居中 */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--white);
-    font-size: 2rem;
-    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+    
+    /* 4. 圖示樣式 */
+    color: #ffffff;
+    font-size: 2.2rem;
+    
+    /* 5. 初始陰影：外部柔光 + 內部頂部高光 */
+    box-shadow: 
+        0 8px 20px rgba(39, 174, 96, 0.3), 
+        inset 0 4px 8px rgba(255, 255, 255, 0.4);
+    
+    /* 6. 動畫設定 */
+    transition: all 0.3s ease;
+    animation: pulse-heart 2s infinite ease-in-out;
+    transform-origin: center;
+    
+    /* 防止縮放時邊緣產生鋸齒 */
+    backface-visibility: hidden;
+}
+
+/* 7. 模擬真實心跳頻率的動畫 (雙跳動邏輯) */
+@keyframes pulse-heart {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3), inset 0 4px 8px rgba(255, 255, 255, 0.4);
+    }
+    15% {
+        transform: scale(1.06); /* 第一下收縮 */
+        box-shadow: 0 6px 20px rgba(39, 174, 96, 0.5), inset 0 4px 8px rgba(255, 255, 255, 0.4);
+    }
+    30% {
+        transform: scale(1.02);
+    }
+    45% {
+        transform: scale(1.1); /* 第二下跳動，幅度稍大 */
+        box-shadow: 0 8px 25px rgba(39, 174, 96, 0.6), inset 0 4px 8px rgba(255, 255, 255, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3), inset 0 4px 8px rgba(255, 255, 255, 0.4);
+    }
 }
 
 .bmi-info {
@@ -2168,7 +2253,7 @@ canvas {
 }
 
 .save-stats-btn {
-    background: linear-gradient(135deg, var(--secondary), #27ae60);
+    background: var(--gradient-blue);
     color: var(--white);
     border: none;
     padding: 1rem 2rem;
@@ -2177,7 +2262,7 @@ canvas {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
     display: inline-flex;
     align-items: center;
     gap: 0.8rem;
@@ -2185,8 +2270,8 @@ canvas {
 
 .save-stats-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(46, 204, 113, 0.4);
-    background: linear-gradient(135deg, #27ae60, var(--secondary));
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
+    background: var(--gradient-blue);
 }
 
 .save-stats-btn:active {
