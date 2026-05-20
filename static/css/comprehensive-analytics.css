@@ -2,7 +2,7 @@
 .comprehensive-analytics {
     margin-top: 30px;
     padding: 25px;
-    background: var(--gradient-green);
+    background-color: #1fc75c;
     border-radius: 20px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.15);
     color: white;
@@ -16,11 +16,15 @@
 }
 
 .comprehensive-analytics .stat-card {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.05);
     padding: 25px;
     border-radius: 15px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    /* 稍微拉高邊框透明度，增加光澤感 */
+    border: 1.5px solid rgba(255, 255, 255, 0.2); 
+    /* 加入淡淡的深綠色陰影，增加深度 */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); 
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -77,7 +81,7 @@
 /* 體態分析區域 */
 .body-analysis-section {
     margin-bottom: 40px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.1);
     padding: 25px;
     border-radius: 15px;
     backdrop-filter: blur(5px);
@@ -99,39 +103,50 @@
 }
 
 .current-body-stats {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.15);
     padding: 20px;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .current-body-stats h4 {
     margin-bottom: 15px;
-    color: #4CAF50;
+    color: #226e58;
     font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(13, 59, 46, 0.15);
+    padding-bottom: 8px;
+    display: inline-block;
 }
 
 .body-trends {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.15);
     padding: 20px;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .body-trends h4 {
     margin-bottom: 15px;
-    color: #4CAF50;
+    color: #226e58;
     font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(13, 59, 46, 0.15);
+    padding-bottom: 8px;
+    display: inline-block;
 }
 
 /* 運動表現分析 */
 .exercise-analysis-section {
     margin-bottom: 40px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.1);
     padding: 25px;
     border-radius: 15px;
     backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .exercise-analysis-section h3 {
@@ -152,7 +167,8 @@
     padding: 25px;
     border-radius: 12px;
     backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 /* 圖表容器通用樣式 */
@@ -221,9 +237,13 @@
 
 .exercise-types h4, .recent-activities h4 {
     margin-bottom: 20px;
-    color: #4CAF50;
+    color: #226e58;
     font-weight: 600;
     text-align: center;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(13, 59, 46, 0.15);
+    padding-bottom: 8px;
+    display: inline-block;
 }
 
 .exercise-type-item {
@@ -250,7 +270,7 @@
 }
 
 .comprehensive-analytics .exercise-count {
-    color: #4CAF50;
+    color: #329c35;
     font-weight: bold;
     font-size: 1.1rem;
 }
@@ -388,7 +408,7 @@
 
 .body-stat-value {
     font-weight: 600;
-    color: #4CAF50;
+    color: #329c35;
 }
 
 /* 無數據提示樣式 */
